@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   analyzeTicket,
@@ -7,30 +7,38 @@ import {
 
 export default function useTriage() {
   const [loading, setLoading] = useState(false);
-
   const [result, setResult] = useState(null);
-
   const [tickets, setTickets] = useState([]);
+
+  const loadTickets = async () => {
+    try {
+      const response = await getTickets();
+      setTickets(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const analyze = async (message) => {
     setLoading(true);
 
     try {
-      const data = await analyzeTicket(message);
+      const response = await analyzeTicket(message);
 
-      setResult(data.data);
+      setResult(response.data);
 
-      return data;
+      // Refresh history automatically
+      await loadTickets();
+    } catch (error) {
+      alert(error.message);
     } finally {
       setLoading(false);
     }
   };
 
-  const loadTickets = async () => {
-    const data = await getTickets();
-
-    setTickets(data.data);
-  };
+  useEffect(() => {
+    loadTickets();
+  }, []);
 
   return {
     loading,

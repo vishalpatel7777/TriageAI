@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+/* ---------- Theme ---------- */
+
+@theme {
+  --color-primary: #2563eb;
+  --color-primary-dark: #1d4ed8;
+
+  --color-surface: #ffffff;
+  --color-background: #f8fafc;
+
+  --color-success: #16a34a;
+  --color-warning: #f59e0b;
+  --color-danger: #dc2626;
+
+  --color-text: #0f172a;
+  --color-text-light: #64748b;
+
+  --radius-card: 1rem;
+}
+
+/* ---------- Base ---------- */
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-text);
+  font-family:
+    Inter,
+    system-ui,
+    sans-serif;
+}
