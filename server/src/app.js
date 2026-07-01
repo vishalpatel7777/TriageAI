@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
+import apiRoutes from "./routes/index.js";
 
 const app = express();
 
@@ -21,5 +22,8 @@ app.get("/", (req, res) => {
         message: "TriageAI API Running 🚀",
     });
 });
+
+app.use("/api/v1", apiRoutes);
+
 
 export default app;
