@@ -7,12 +7,17 @@ const tickets = JSON.parse(
 const API = "http://localhost:5000/api/v1/triage";
 
 async function runTests() {
-  console.log("\n🚀 Running AI Triage Tests...\n");
+  console.log("\n🚀 Running AI Evaluation Suite\n");
 
   let passed = 0;
+  let failed = 0;
+  let totalConfidence = 0;
+  let totalResponseTime = 0;
 
-  for (const ticket of tickets) {
+  for (const [index, ticket] of tickets.entries()) {
     try {
+      const start = performance.now();
+
       const response = await fetch(API, {
         method: "POST",
         headers: {
@@ -23,10 +28,20 @@ async function runTests() {
         }),
       });
 
+      const end = performance.now();
+
+      const responseTime = Math.round(end - start);
+
       const json = await response.json();
 
       if (!response.ok) {
-        console.log("❌ API Error:", json.message);
+        failed++;
+
+        console.log("------------------------------------------------");
+        console.log(`❌ Test ${index + 1}`);
+        console.log("API Error:", json.message);
+        console.log("------------------------------------------------\n");
+
         continue;
       }
 
@@ -36,27 +51,78 @@ async function runTests() {
         result.category.toLowerCase() ===
         ticket.expectedCategory.toLowerCase();
 
-      if (success) passed++;
+      if (success) {
+        passed++;
+      } else {
+        failed++;
+      }
 
-      console.log("--------------------------------------------------");
-      console.log("📩 Message:");
+      totalConfidence += result.confidence;
+      totalResponseTime += responseTime;
+
+      console.log("------------------------------------------------");
+      console.log(`🧪 Test ${index + 1}`);
+
+      console.log("\n📩 Message");
       console.log(ticket.message);
 
-      console.log("\n✅ Expected :", ticket.expectedCategory);
-      console.log("🤖 Predicted:", result.category);
-      console.log("🎯 Priority :", result.priority);
-      console.log("📊 Confidence:", result.confidence);
+      console.log("\nExpected Category :", ticket.expectedCategory);
+      console.log("Predicted Category:", result.category);
 
-      console.log(success ? "\n✅ PASS" : "\n❌ FAIL");
-      console.log("--------------------------------------------------\n");
+      console.log("\nPriority :", result.priority);
+      console.log("Human Review :", result.needsHuman ? "Yes" : "No");
+
+      console.log(
+        "Confidence :",
+        `${(result.confidence * 100).toFixed(1)}%`
+      );
+
+      console.log(
+        "Response Time :",
+        `${responseTime} ms`
+      );
+
+      console.log(
+        "\nResult:",
+        success ? "✅ PASS" : "❌ FAIL"
+      );
+
+      console.log("------------------------------------------------\n");
 
     } catch (error) {
-      console.log("❌ Request Failed");
-      console.error(error.message);
+      failed++;
+
+      console.log("------------------------------------------------");
+      console.log(`❌ Test ${index + 1}`);
+      console.log(error.message);
+      console.log("------------------------------------------------\n");
     }
   }
 
-  console.log(`\n🏁 Accuracy: ${passed}/${tickets.length}\n`);
+  const accuracy = (
+    (passed / tickets.length) *
+    100
+  ).toFixed(2);
+
+  const avgConfidence = (
+    (totalConfidence / tickets.length) *
+    100
+  ).toFixed(2);
+
+  const avgResponse = (
+    totalResponseTime / tickets.length
+  ).toFixed(0);
+
+  console.log("\n================ FINAL REPORT ================\n");
+
+  console.log(`Total Tests       : ${tickets.length}`);
+  console.log(`Passed            : ${passed}`);
+  console.log(`Failed            : ${failed}`);
+  console.log(`Accuracy          : ${accuracy}%`);
+  console.log(`Avg Confidence    : ${avgConfidence}%`);
+  console.log(`Avg Response Time : ${avgResponse} ms`);
+
+  console.log("\n==============================================\n");
 }
 
 runTests();
