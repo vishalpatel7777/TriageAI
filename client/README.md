@@ -1,16 +1,168 @@
-# React + Vite
+# 🎨 TriageAI Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React frontend for the TriageAI customer support dashboard.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+# Overview
 
-## React Compiler
+The frontend provides an intuitive dashboard for customer support agents to submit customer requests, visualize AI-generated analysis, monitor ticket statistics, and review previously analyzed tickets.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+The application communicates with the Express backend through REST APIs.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+# Features
+
+- Customer message submission
+- AI Analysis Dashboard
+- Ticket Statistics
+- Ticket History
+- Ticket Filtering
+- Human Review Indicators
+- Confidence Visualization
+- Loading & Empty States
+- Responsive Layout
+
+---
+
+# Folder Structure
+
+```text
+src/
+│
+├── components/
+│   ├── Layout/
+│   ├── Triage/
+│   └── UI/
+│
+├── hooks/
+│
+├── pages/
+│
+├── services/
+│
+├── constants/
+│
+├── utils/
+│
+├── App.jsx
+└── main.jsx
+```
+
+---
+
+# Component Overview
+
+## Layout
+
+Contains reusable layout components.
+
+- Navbar
+
+---
+
+## Triage Components
+
+Contains domain-specific UI.
+
+- MessageForm
+- ResultCard
+- TicketHistory
+- DashboardStats
+- ConfidenceBar
+- PriorityBadge
+
+---
+
+## UI Components
+
+Reusable generic components.
+
+- Button
+- Card
+- Loader
+
+---
+
+# Data Flow
+
+```text
+Customer Input
+
+↓
+
+MessageForm
+
+↓
+
+Axios Service
+
+↓
+
+Backend API
+
+↓
+
+AI Analysis
+
+↓
+
+Dashboard Update
+```
+
+---
+
+# API Communication
+
+All API requests are centralized inside
+
+```
+services/
+```
+
+This provides a single source of truth for backend communication.
+
+---
+
+# State Management
+
+The application uses a custom React Hook.
+
+```
+useTriage()
+```
+
+Responsibilities
+
+- Submit customer messages
+- Store AI results
+- Fetch ticket history
+- Manage loading state
+- Manage selected ticket
+
+---
+
+# Running
+
+Install dependencies
+
+```bash
+npm install
+```
+
+Start development server
+
+```bash
+npm run dev
+```
+
+---
+
+# Future Improvements
+
+- Authentication
+- Charts
+- Pagination
+- Dark Mode
+- Real-time Updates

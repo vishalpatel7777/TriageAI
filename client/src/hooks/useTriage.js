@@ -9,6 +9,8 @@ export default function useTriage() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [tickets, setTickets] = useState([]);
+const [selectedTicket, setSelectedTicket] = useState(null);
+
 
   const loadTickets = async () => {
     try {
@@ -46,5 +48,8 @@ export default function useTriage() {
     tickets,
     analyze,
     loadTickets,
+
+    selectedTicket,
+  setSelectedTicket,
   };
 }
